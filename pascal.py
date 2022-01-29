@@ -62,7 +62,7 @@ def addcalculation(filename, comp="Z"):
     file1.write(dataLine+" \n")
     file1.close()
 
-def readCalFile(filepath, comp="Z"):
+def readCalFile(filepath, comp):
     f = open(filepath, "r")
     data={}
     for line in f:
@@ -105,9 +105,20 @@ def normalize(data):
                 data[key][1][i] /= referenceValue
         return data
 
-def generateCalData(filename,comp="Z"):
-    data = readCalFile(filename)
+def exportToFile(data, comp='Z'):
+    for key in data:
+        for i, sensor in enumerate(data[key][0]):
+            value = data[key][1][i]
+            dataLine = sensor+' '+comp+' '+key+' '+str(value)
+            file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "a")  # append mode
+            file1.write(dataLine+" \n")
+            file1.close()
+
+
+def generateCalData(filename,comp):
+    data = readCalFile(filename, comp)
     data = normalize(data)
+    exportToFile(data,comp)
     data = reformat(data)
     return data
 
@@ -119,9 +130,9 @@ def plotData(dataZ, dataN, dataE):
     for key in dataZ:
         ax1.plot(dataZ[key][0],dataZ[key][1], '-o', label=key)
     for key in dataN:
-        ax2.plot(dataN[key][0],dataZ[key][1], '-o', label=key)
+        ax2.plot(dataN[key][0],dataN[key][1], '-o', label=key)
     for key in dataE:
-        ax3.plot(dataE[key][0],dataZ[key][1], '-o', label=key)
+        ax3.plot(dataE[key][0],dataE[key][1], '-o', label=key)
     # ax1.legend()
     ax1.legend(bbox_to_anchor=(1, 1.2),ncol = len(ax1.lines))
     ax1.set_ylabel('Komponen Z')
