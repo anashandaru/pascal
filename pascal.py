@@ -47,7 +47,7 @@ def getDateFrom(tr):
 
 def getSensorFrom(filename):
     # filename = "PS-BRT-GEOBIT325-PS001-12022022_Z.mseed"
-    return filename.split('-')[2]
+    return filename.replace('_','-').split('-')[2]
 
 def addcalculation(filename, comp="Z"):
     tr = readComp(filename,comp)
@@ -97,7 +97,7 @@ def normalize(data):
     for date in data:
         refIndex = 0
         for i, sensor in enumerate(data[date][0]):
-            if sensor == 'GEOBIT1':
+            if sensor == 'GEOBIT01':
                 refIndex = i
         referenceValue = data[date][1][refIndex]
         for key in data:
