@@ -93,11 +93,11 @@ def reformat(data):
                 newData[sensor] = [[key],[value]]
     return newData
 
-def normalize(data):
+def normalize(data, referenceSensor='GEOBIT1'):
     for date in data:
         refIndex = 0
         for i, sensor in enumerate(data[date][0]):
-            if sensor == 'GEOBIT01':
+            if sensor == referenceSensor:
                 refIndex = i
         referenceValue = data[date][1][refIndex]
         for key in data:
@@ -110,14 +110,14 @@ def exportToFile(data, comp='Z'):
         for i, sensor in enumerate(data[key][0]):
             value = data[key][1][i]
             dataLine = sensor+' '+comp+' '+key+' '+str(value)
-            file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "a")  # append mode
+            file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "w")  # append mode
             file1.write(dataLine+" \n")
             file1.close()
 
 
-def generateCalData(filename,comp):
+def generateCalData(filename,comp,ref):
     data = readCalFile(filename, comp)
-    data = normalize(data)
+    data = normalize(data,ref)
     exportToFile(data,comp)
     data = reformat(data)
     return data
@@ -162,9 +162,10 @@ def add(filename):
 @click.argument('filename', type=click.Path(exists=True))
 def plot(filename):
     print("Plot daily calibration data")
-    dataZ = generateCalData(filename, "Z")
-    dataN = generateCalData(filename, "N")
-    dataE = generateCalData(filename, "E")
+    referenceSensor = click.prompt('Select sensor reference [GEOBIT01] ', type=str)
+    dataZ = generateCalData(filename, "Z",referenceSensor)
+    dataN = generateCalData(filename, "N",referenceSensor)
+    dataE = generateCalData(filename, "E",referenceSensor)
     plotData(dataZ, dataN, dataE)
 
 main.add_command(add)
