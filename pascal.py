@@ -94,23 +94,37 @@ def reformat(data):
     return newData
 
 def normalize(data, referenceSensor='GEOBIT1'):
+    refDict = {}
     for date in data:
+        print(date)
         refIndex = 0
         for i, sensor in enumerate(data[date][0]):
             if sensor == referenceSensor:
                 refIndex = i
-        referenceValue = data[date][1][refIndex]
-        for key in data:
-            for i in range(len(data[key][1])):
-                data[key][1][i] /= referenceValue
-        return data
+                referenceValue = data[date][1][refIndex]
+                refDict[date] = referenceValue
+        
+    print(refDict)
+    
+    for date in data:
+        for i in range(len(data[date][1])):
+            sensor = data[date][0][i]
+            ref = refDict[date]
+            data[date][1][i] /= ref
+            print("normalize {} at {} using {}".format(sensor,date,ref))
+    return data
+
+def clearNorfile():
+    file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "w")  # append mode
+    file1.write("")
+    file1.close()
 
 def exportToFile(data, comp='Z'):
     for key in data:
         for i, sensor in enumerate(data[key][0]):
             value = data[key][1][i]
             dataLine = sensor+' '+comp+' '+key+' '+str(value)
-            file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "w")  # append mode
+            file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "a")  # append mode
             file1.write(dataLine+" \n")
             file1.close()
 
@@ -163,6 +177,7 @@ def add(filename):
 def plot(filename):
     print("Plot daily calibration data")
     referenceSensor = click.prompt('Select sensor reference [GEOBIT01] ', type=str)
+    clearNorfile()
     dataZ = generateCalData(filename, "Z",referenceSensor)
     dataN = generateCalData(filename, "N",referenceSensor)
     dataE = generateCalData(filename, "E",referenceSensor)
