@@ -135,7 +135,7 @@ def generateCalData(filename,comp,ref):
 
 def plotData(dataZ, dataN, dataE):
     fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
-    fig.set_size_inches(8.2, 11)
+    fig.set_size_inches(9, 11)
     fig.suptitle("Grafik Kalibrasi Harian Survei Seismik Pasif Area Piraiba dan Tanjung Barat")
     # ax1.plot(x, y)
     for key in dataZ:
