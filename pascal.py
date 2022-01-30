@@ -96,7 +96,6 @@ def reformat(data):
 def normalize(data, referenceSensor='GEOBIT1'):
     refDict = {}
     for date in data:
-        print(date)
         refIndex = 0
         for i, sensor in enumerate(data[date][0]):
             if sensor == referenceSensor:
@@ -104,13 +103,11 @@ def normalize(data, referenceSensor='GEOBIT1'):
                 referenceValue = data[date][1][refIndex]
                 refDict[date] = referenceValue
         
-    print(refDict)
-    
     for date in data:
         for i in range(len(data[date][1])):
             sensor = data[date][0][i]
             ref = refDict[date]
-            data[date][1][i] /= ref
+            data[date][1][i] = ref/data[date][1][i]
             print("normalize {} at {} using {}".format(sensor,date,ref))
     return data
 
