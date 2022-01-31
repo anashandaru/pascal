@@ -133,10 +133,10 @@ def generateCalData(filename,comp,ref):
     data = reformat(data)
     return data
 
-def plotData(dataZ, dataN, dataE):
+def plotData(dataZ, dataN, dataE, ref):
     fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
     fig.set_size_inches(9, 11)
-    fig.suptitle("Grafik Kalibrasi Harian Survei Seismik Pasif Area Piraiba dan Tanjung Barat")
+    fig.suptitle("Grafik Kalibrasi Harian Survei Seismik Pasif Area Piraiba dan Tanjung Barat\n Sensor Referensi : "+ref)
     # ax1.plot(x, y)
     for key in dataZ:
         ax1.plot(dataZ[key][0],dataZ[key][1], '-o', label=key)
@@ -146,12 +146,15 @@ def plotData(dataZ, dataN, dataE):
         ax3.plot(dataE[key][0],dataE[key][1], '-o', label=key)
     # ax1.legend()
     ax1.legend(bbox_to_anchor=(1, 1.2),ncol = len(ax1.lines))
-    ax1.set_ylabel('Komponen Z')
-    ax2.set_ylabel('Komponen N')
-    ax3.set_ylabel('Komponen E')
-    ax1.yaxis.tick_right()
-    ax2.yaxis.tick_right()
-    ax3.yaxis.tick_right()
+    ax1.set_ylabel('Faktor Kalibrasi')
+    ax2.set_ylabel('Faktor Kalibrasi')
+    ax3.set_ylabel('Faktor Kalibrasi')
+    ax1.set_title('Komponen Z')
+    ax2.set_title('Komponen N')
+    ax3.set_title('Komponen E')
+    # ax1.yaxis.tick_right()
+    # ax2.yaxis.tick_right()
+    # ax3.yaxis.tick_right()
     plt.xlabel("Tanggal")
     plt.xticks(rotation=90)
     plt.savefig("GrafikKalibrasiHarian.png")
@@ -178,7 +181,7 @@ def plot(filename):
     dataZ = generateCalData(filename, "Z",referenceSensor)
     dataN = generateCalData(filename, "N",referenceSensor)
     dataE = generateCalData(filename, "E",referenceSensor)
-    plotData(dataZ, dataN, dataE)
+    plotData(dataZ, dataN, dataE, referenceSensor)
 
 main.add_command(add)
 main.add_command(plot)
