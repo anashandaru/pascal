@@ -3,6 +3,8 @@ from obspy import read
 from obspy.core import Stream
 from numpy import abs, fft, argsort, sqrt, mean
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import datetime
 import click
 
 def spectrum(trace):
@@ -86,11 +88,12 @@ def reformat(data):
     for key in data:
         for i, sensor in enumerate(data[key][0]):
             value = data[key][1][i]
+            date = datetime.strptime(key,'%d/%m/%y')
             if sensor in newData:
-                newData[sensor][0].append(key)
+                newData[sensor][0].append(date)
                 newData[sensor][1].append(value)
             else:
-                newData[sensor] = [[key],[value]]
+                newData[sensor] = [[date],[value]]
     return newData
 
 def normalize(data, referenceSensor='GEOBIT1'):
@@ -155,6 +158,9 @@ def plotData(dataZ, dataN, dataE, ref):
     # ax1.yaxis.tick_right()
     # ax2.yaxis.tick_right()
     # ax3.yaxis.tick_right()
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y'))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+    plt.gcf().autofmt_xdate()
     plt.xlabel("Tanggal")
     plt.xticks(rotation=90)
     plt.savefig("GrafikKalibrasiHarian.png")
