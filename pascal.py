@@ -149,10 +149,10 @@ def plotData(dataZ, dataN, dataE, ref):
         ax1.plot(x, y, '-o', label=key)
     for key in dataN:
         x, y = getSorted(dataN[key][0],dataN[key][1])
-        ax2.plot(dataN[key][0],dataN[key][1], '-o', label=key)
+        ax2.plot(x, y, '-o', label=key)
     for key in dataE:
         x, y = getSorted(dataE[key][0],dataE[key][1])
-        ax3.plot(dataE[key][0],dataE[key][1], '-o', label=key)
+        ax3.plot(x, y, '-o', label=key)
     # ax1.legend()
     ax1.legend(bbox_to_anchor=(1, 1.2),ncol = len(ax1.lines))
     ax1.set_ylabel('Faktor Kalibrasi')
