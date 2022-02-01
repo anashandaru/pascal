@@ -114,6 +114,9 @@ def normalize(data, referenceSensor='GEOBIT1'):
             print("normalize {} at {} using {}".format(sensor,date,ref))
     return data
 
+def getSorted(x, y):
+    return zip(*sorted(zip(x, y)))
+
 def clearNorfile():
     file1 = open("NORMALISASI-FILE-KALIBRASI.txt", "w")  # append mode
     file1.write("")
@@ -142,10 +145,13 @@ def plotData(dataZ, dataN, dataE, ref):
     fig.suptitle("Grafik Kalibrasi Harian Survei Seismik Pasif Area Piraiba dan Tanjung Barat\n Sensor Referensi : "+ref)
     # ax1.plot(x, y)
     for key in dataZ:
-        ax1.plot(dataZ[key][0],dataZ[key][1], '-o', label=key)
+        x, y = getSorted(dataZ[key][0],dataZ[key][1])
+        ax1.plot(x, y, '-o', label=key)
     for key in dataN:
+        x, y = getSorted(dataN[key][0],dataN[key][1])
         ax2.plot(dataN[key][0],dataN[key][1], '-o', label=key)
     for key in dataE:
+        x, y = getSorted(dataE[key][0],dataE[key][1])
         ax3.plot(dataE[key][0],dataE[key][1], '-o', label=key)
     # ax1.legend()
     ax1.legend(bbox_to_anchor=(1, 1.2),ncol = len(ax1.lines))
